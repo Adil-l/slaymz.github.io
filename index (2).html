@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Galeria Multimídia — Streaming Vibe</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* === Variáveis e Reset === */
+    :root {
+      --bg: #070708;
+      --panel: #0f0f10;
+      --accent: #FF6A00;
+      --muted: #bfbfbf;
+      --radius: 14px;
+      --gap: 22px;
+      --shadow: 0 12px 40px rgba(0,0,0,0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Poppins", sans-serif;
+      background: var(--bg);
+      color: #fff;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* === Header === */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,.65);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      z-index: 100;
+    }
+
+    .header-inner {
+      width: 100%;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand svg {
+      width: 34px;
+      height: 34px;
+    }
+
+    .nav {
+      margin-left: auto;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .link {
+      padding: 10px 14px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .link:hover {
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+    }
+
+    /* === Main & Sections === */
+    main {
+      max-width: var(--max-width);
+      margin: 60px auto 30px;
+      padding: 0 15px;
+    }
+
+    .section {
+      padding: 40px 15px;
+    }
+
+    .section h2 {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: clamp(1.6rem, 2.5vw, 1.9rem);
+      font-weight: 700;
+    }
+
+    /* === Hero === */
+    .hero {
+      position: relative;
+      width: 100%;
+      min-height: 60vh;
+      max-height: 85vh;
+      overflow: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      background: linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.75));
+      padding: clamp(20px, 5vw, 60px);
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 4vw, 4rem);
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      color: var(--muted);
+      margin-bottom: 25px;
+    }
+
+    .cta {
+      background: var(--accent);
+      padding: 24px 48px;
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    /* === Grid === */
+    .grid {
+      display: grid;
+      gap: var(--gap);
+      width: 100%;
+    }
+
+    .grid.images { grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); }
+    .grid.videos { grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); }
+    .grid.audios { grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); }
+
+    /* === Cards === */
+    .card {
+      background: #111;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: 0 8px 25px rgba(0,0,0,.6);
+      transition: transform .3s;
+    }
+
+    .card:hover { transform: translateY(-6px); }
+
+    .media {
+      width: 100%;
+      height: 550px;
+      object-fit: cover;
+      display: block;
+      transition: transform .35s;
+      background: #000;
+    }
+
+    .card:hover .media { transform: scale(1.05); }
+
+    .caption {
+      padding: 12px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .controls {
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0d0d0d;
+      flex-wrap: wrap;
+    }
+
+    .select {
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+    }
+
+    /* === Áudio cards atualizados === */
+    .audio-thumb {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      border-radius: var(--radius) var(--radius) 0 0;
+      background: #000;
+    }
+
+    .audio-card {
+      overflow: hidden;
+      text-align: center;
+    }
+
+    .audio-card audio {
+      width: 90%;
+      margin: 10px auto;
+      display: block;
+    }
+
+    /* === Footer === */
+    .footer {
+      text-align: center;
+      padding: 30px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    /* === Modal === */
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+    }
+
+    .modal[open] { display: flex; }
+
+    .modal-inner {
+      background: #111;
+      border-radius: var(--radius);
+      max-width: 900px;
+      width: 100%;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-media {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .modal-media img,
+    .modal-media video {
+      max-width: 100%;
+      max-height: 70vh;
+      border-radius: 10px;
+    }
+
+    .modal-toolbar {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .icon-btn {
+      padding: 8px 12px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    /* === Responsivo === */
+    @media (max-width: 1200px){
+      .grid.images { grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
+      .grid.videos { grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); }
+      .grid.audios { grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
+    }
+
+    @media (max-width: 768px){
+      header { flex-direction: column; height: auto; padding: 10px 0; }
+      .nav { margin: 10px 0 0; justify-content: center; gap: 10px; }
+      .grid.images { grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); }
+      .grid.videos { grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); }
+      .grid.audios { grid-template-columns: repeat(auto-fit, minmax(150px,1fr)); }
+      .media { height: 150px; }
+    }
+
+    @media (max-width: 480px){
+      .grid.images, .grid.videos, .grid.audios { grid-template-columns: 1fr; }
+      .media { height: 120px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- === Header === -->
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="46" fill="var(--accent)"/>
+        </svg>
+        WeAreSlay
+      </div>
+      <nav class="nav">
+        <a href="#home" class="link">Home</a>
+        <a href="#imagensA" class="link">Imagens A</a>
+        <a href="#imagensB" class="link">Imagens B</a>
+        <a href="#media" class="link">Mídia</a>
+        <a href="cv.html" class="link"> C.Vitae</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- === Main === -->
+  <main>
+    <!-- Hero -->
+    <section id="home" class="section hero">
+      <img id="cover" src="1.jpg" alt="Capa">
+      <div class="hero-overlay">
+        <h1>Bem-vindo à Galeria Multimídia</h1>
+        <p>Imagens, vídeos e áudios em estilo streaming</p>
+        <button class="cta" onclick="location.href='#imagensA'">Explorar</button>
+      </div>
+    </section>
+
+    <!-- Imagens A -->
+    <section id="imagensA" class="section">
+      <h2>Imagens — Destaques</h2>
+      <div class="grid images">
+        <div class="card"><img class="media gallery-image" data-src="2A1.jpg" alt="Imagem 1"></div>
+        <div class="card"><img class="media gallery-image" data-src="2A2.jpg" alt="Imagem 2"></div>
+        <div class="card"><img class="media gallery-image" data-src="2A4.jpg" alt="Imagem 3"></div>
+        <div class="card"><img class="media gallery-image" data-src="2A3.jpg" alt="Imagem 4"></div>
+      </div>
+    </section>
+
+    <!-- Imagens B -->
+    <section id="imagensB" class="section">
+      <h2>Imagens com Legendas</h2>
+      <div class="grid images">
+        <div class="card">
+          <img class="media gallery-image" data-src="1A.jpg">
+          <div class="caption">Legenda 1</div>
+        </div>
+        <div class="card">
+          <img class="media gallery-image" data-src="1B.jpg">
+          <div class="caption">Legenda 2</div>
+        </div>
+        <div class="card">
+          <img class="media gallery-image" data-src="1C.jpg">
+          <div class="caption">Legenda 3</div>
+        </div>
+        <div class="card">
+          <img class="media gallery-image" data-src="1D.jpg">
+          <div class="caption">Legenda 4</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mídia -->
+    <section id="media" class="section">
+      <h2>Vídeos</h2>
+      <div class="grid videos">
+        <div class="card">
+          <video class="media video-item" controls data-src="Godzilla x Kong O Novo Império 2024.mp4" poster="god.jpg"></video>
+          <div class="controls">
+            <a href="Godzilla x Kong O Novo Império 2024.mp4" download class="icon-btn">Download</a>
+            <select class="select speed">
+              <option value="1" selected>1x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="card">
+          <video class="media video-item" controls data-src="Hacker Todo Crime tem um Início 2016.mp4" poster="mrx.jpg"></video>
+          <div class="controls">
+            <a href="Hacker Todo Crime tem um Início 2016.mp4" download class="icon-btn">Download</a>
+            <select class="select speed">
+              <option value="1" selected>1x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Áudios -->
+      <h2 style="margin-top:40px">Áudios</h2>
+      <div class="grid audios">
+        <div class="card audio-card">
+          <img src="mas.jpg" alt="Thumb Masego" class="audio-thumb">
+          <div class="caption">Masego X Madesian</div>
+          <audio controls>
+            <source src="12.m4a">
+          </audio>
+          <a href="12.m4a" download class="icon-btn" style="margin:10px auto;display:inline-block">Download</a>
+        </div>
+
+        <div class="card audio-card">
+          <img src="ken.jpg" alt="Thumb Ken Carson" class="audio-thumb">
+          <div class="caption">Ken Carson</div>
+          <audio controls>
+            <source src="12-1.mp3">
+          </audio>
+          <a href="12-1.mp3" download class="icon-btn" style="margin:10px auto;display:inline-block">Download</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">© 2025 WeAreSlay • 2025</footer>
+  </main>
+
+  <!-- Modal -->
+  <div id="lightbox" class="modal">
+    <div class="modal-inner">
+      <div class="modal-media" id="modalMedia"></div>
+      <div class="modal-toolbar">
+        <button id="closeModal" class="icon-btn">Fechar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- === JS === -->
+  <script>
+    const PLACEHOLDER = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><rect width="100%" height="100%" fill="#141414"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="28" fill="#FF6A00">Imagem não encontrada</text></svg>');
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Imagens
+      document.querySelectorAll('.gallery-image').forEach(img => {
+        const src = img.dataset.src;
+        const pre = new Image();
+        pre.onload = () => img.src = src;
+        pre.onerror = () => img.src = PLACEHOLDER;
+        pre.src = src;
+        img.addEventListener('click', () => openModal(`<img src="${img.src}" style="max-width:100%">`));
+      });
+
+      // Vídeos
+      document.querySelectorAll('.video-item').forEach(v => {
+        const src = v.dataset.src;
+        if(src) {
+          const s = document.createElement('source');
+          s.src = src;
+          v.appendChild(s);
+        }
+        v.addEventListener('dblclick', () => openModal(`<video src="${src}" controls autoplay style="max-width:100%">`));
+      });
+
+      // Velocidade de vídeos
+      document.querySelectorAll('.speed').forEach(sel => {
+        sel.addEventListener('change', () => {
+          const vid = sel.closest('.card').querySelector('video');
+          vid.playbackRate = parseFloat(sel.value);
+        });
+      });
+    });
+
+    function openModal(content){
+      const m = document.getElementById('lightbox');
+      const mm = document.getElementById('modalMedia');
+      mm.innerHTML = content;
+      m.setAttribute('open','');
+    }
+
+    document.getElementById('closeModal').onclick = () => document.getElementById('lightbox').removeAttribute('open');
+  </script>
+</body>
+</html>

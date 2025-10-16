@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CV Adilson Gavumende</title>
+  <style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+   .navbar {
+     display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #222;
+      padding: 45px 80px;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      height: 70px;
+      box-sizing: border-box;
+    }
+
+    .navbar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 35px; /* menor espaço entre botões */
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+      position: relative;
+      padding-bottom: 4px;
+    }
+
+    .navbar a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 2px;
+      background-color: #FFA202;
+      transition: width 0.3s ease;
+    }
+
+    .navbar a:hover::after {
+      width: 100%;
+    }
+
+    .logout-btn {
+  background-color: #FFA202;
+  color: #1E1E1E;
+  border: none;
+  padding: 8px 18px;
+  font-size: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  background-color: #ffb400;
+  color: white;
+}
+
+    @media (max-width: 600px) {
+      .navbar {
+        flex-direction: column;
+        height: auto;
+        padding: 15px;
+      }
+      .navbar a {
+        margin-top: 8px;
+      }
+    }
+
+.hero {
+  position: relative;
+  height: 556px;
+  background: url("mask.svg") no-repeat center center;
+  background-size: cover;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 50px;
+  margin-top: 90px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity:0%;
+  width: 100%;
+  height: 100%;
+  background: #1E1E1E;
+  z-index: 0;
+}
+
+.hero-content-group {
+  position: relative;
+  top: -65px;
+  left: -13px;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-content-group img {
+  position: absolute;
+  top: 20%;
+  left: 50px;
+  width: 680px;
+  max-width: 90%;
+  z-index: 1;
+}
+
+.scroll-down {
+  position: absolute;
+  right: 100px;
+  bottom: 55px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  color: white;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.scroll-down .scroll-icon {
+  width: 30px;
+  height: 30px;
+  gap: 10px;
+}
+@media (max-width: 900px) {
+  .hero-content-group img {
+    width: 500px;
+  }
+  .hero-text {
+    font-size: 24px;
+  }
+  .hero-line {
+    width: 200px;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-content-group img {
+    width: 300px;
+  }
+  .hero-text {
+    font-size: 20px;
+  }
+  .hero-line {
+    width: 150px;
+  }
+}
+.about {
+  bottom: 1000px;
+  display: flex;
+  align-items: flex-start;
+  gap: 330px;
+  padding:30px 80px;
+  background-color: #f5f5f5;
+  color: #1E1E1E;
+  box-sizing: border-box;
+}
+
+.about h3 {
+  flex: 0 0 200px;
+  margin: 40px 0 0 0; 
+  color: #FFA202;
+  font-size: 40px;
+}
+
+.about-text {
+  top: 20px;
+  flex: 1;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.about-text p {
+  font-size: 28px;
+  margin-bottom: 15px;
+}
+
+.highlight-text {
+  color: #FFA202;
+  font-weight: bold;
+}
+.highlight-text2{
+  color: #1E1E1E;
+  font-weight: 200;
+}
+
+@media (max-width: 768px) {
+  .about {
+    flex-direction: column;
+    padding: 30px 20px;
+    gap: 20px;
+  }
+
+  .about h3 {
+    flex: none;
+    font-size: 24px;
+  }
+}
+.about-line {
+  position: absolute;
+  width: 1360px;
+  height: 6px;
+  margin-top: 460px;
+  background-color: #1E1E1E;
+  z-index: 2;
+}
+.about-career {
+  display: flex;
+  gap: 70px;         
+  padding: 45px 80px;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+}
+
+.education, .experience {
+  flex: 1;       
+}
+
+.education h3, .experience h3 {
+  color: #FFA202;
+  font-size: 40px;
+  margin-bottom: 40px;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: 100px 2fr;
+  gap: 10px;
+  font-size: 28px;
+}
+
+.years {
+  font-weight: bold;
+  color: #9e9e9e;
+  padding-top: 5px;
+}
+
+.details {
+  color: #1E1E1E;
+  text-align: left;
+  display: flex;             /* empresa e função lado a lado */
+  flex-wrap: wrap;           /* quebra se não couber na linha */
+  gap: 1px;                  /* espaço entre empresa e função */
+  align-items: baseline;
+}
+
+.details .empresa {
+  font-weight: bold;
+  color: #1E1E1E;
+  letter-spacing: 0px;       /* reduz espaçamento entre letras */
+}
+
+.details .funcao {
+  font-weight: normal;
+  font-size: 23px;
+  color: #1E1E1E;
+  letter-spacing: 0px;
+}
+
+@media (max-width: 900px) {
+  .about-career {
+    flex-direction: column;
+    gap: 30px;
+    padding: 30px 20px;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr; 
+  }
+}
+
+.divider {
+  display:flex;
+  position: relative;
+  top: 50px;
+  width: 5px;     
+  height: 520px;
+  margin: 0 0;
+  background-color: #FFA202; 
+}
+.languages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 60px 80px;
+  background-color: #f5f5f5;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.languages-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.languages-header .line {
+  width: 100%;
+  max-width: 1360px;
+  height: 6px;
+  background-color: #1E1E1E;
+}
+
+.languages-header h3 {
+  color: #1E1E1E;
+  font-size: 36px;
+  margin: 40px 0 20px 0;
+}
+
+.language-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1360px;
+  margin-top: 5px;
+}
+
+.language-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 35px;
+  gap: 80px;
+  border:5px solid #FFA202;
+  border-radius:25px;
+  margin-top: 15px;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeSlideUp 0.8s forwards;
+}
+
+.language-item:nth-child(1) { animation-delay: 0.1s; }
+.language-item:nth-child(2) { animation-delay: 0.2s; }
+.language-item:nth-child(3) { animation-delay: 0.3s; }
+.language-item:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes fadeSlideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.language-item .nome {
+  font-weight: bold;
+  font-size: 28px;
+  color: #1E1E1E;
+ margin-right: 40px;
+}
+
+.nivel {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nivel .circle {
+  width: 17px;
+  height: 17px;
+  margin-left:8px;
+  border-radius: 50%;
+  border: 2px solid #FFA202;
+  background-color: #fff;
+}
+
+.nivel .circle.filled {
+  background-color: #FFA202;
+}
+
+.level-text {
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff; 
+  background-color: #1E1E1E;
+  padding:12px 34px;
+  border-radius: 20px;
+  margin-left: 20px;
+}
+
+@media (max-width: 900px) {
+  .languages {
+    padding: 30px 20px;
+  }
+
+  .languages-header h3 {
+    font-size: 28px;
+  }
+
+  .language-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .nivel {
+    margin-top: 8px;
+  }
+}
+.contact-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 100px;
+    background-color: #1E1E1E; /* Barra preta */
+    color: white;
+    position: relative; /* ou fixed se quiser barra sempre visível */
+    bottom: 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.contact-left, .contact-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.contact-left .chat-icon {
+    width: 27px;
+    align-items: center;
+    height: 27px;
+}
+
+.contact-right a {
+    color: #FFA202; /* Email em laranja */
+    text-decoration: none;
+    font-weight: bold;
+    font-size:22px;
+}
+
+@media (max-width: 768px) {
+    .contact-bar {
+        flex-direction: column;
+        gap: 10px;
+        padding: 20px;
+    }
+
+    .contact-right {
+        justify-content: center;
+    }
+}
+.line2 {
+  position: absolute;
+  left: 50%;            
+  transform: translateX(-50%);
+  width: 1360px;
+  height: 6px;
+  background-color: #1E1E1E;
+}
+.skills {
+  display: flex;
+  flex-direction: column;   /* empilha título e lista */
+  align-items: center;      /* centraliza no eixo horizontal */
+  justify-content: center;  /* centraliza no eixo vertical */
+padding: 20px 0 20px 0;
+  text-align: center;
+  background-color: #f5f5f5; /* 🔹 Igual às outras divs */
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.skills h3 {
+  font-size: 36px;
+  margin-bottom: 40px;
+  color: #1E1E1E;
+}
+
+.skills-list {
+  display: flex;
+  gap: 40px;               /* espaço entre os itens */
+  flex-wrap: wrap;         /* quebra de linha se a tela for pequena */
+}
+
+.skills-list span {
+  font-size: 26px;
+  font-weight: bold;
+  color: #1E1E1E;
+  padding: 25px 233px;
+  border: 4px solid #FFA202;
+  border-radius: 15px;
+}
+.khanimambo {
+  display: flex;
+  align-items: center;       /* centraliza verticalmente */
+  justify-content: center;   /* centraliza horizontalmente */
+  background-color: #f5f5f5;
+  width: 100%;
+  padding: 0;                /* remove padding */
+  height: 300px;             /* define altura fixa menor */
+  box-sizing: border-box;
+}
+
+.khanimambo h2 {
+  font-size: 260px;
+  font-weight: bold;
+  color: #1E1E1E;
+  letter-spacing: -0.03em;
+  text-align: center;
+  line-height: 1;            /* reduz o “espaço interno” da linha */
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .khanimambo h2 {
+    font-size: 70px;         /* reduz em telas médias */
+  }
+}
+
+@media (max-width: 600px) {
+  .khanimambo h2 {
+    font-size: 50px;         /* reduz em telas pequenas */
+  }
+}
+
+  </style>
+</head>
+
+<body>
+  <nav class="navbar">
+    <h1>Adilson Gavumende</h1>
+    <div class="nav-links">
+      <a href="#top" class="nav-button">Home</a>
+      <a href="#about">About</a>
+      <a href="#languages">Linguas</a>
+      <a href="#contactos">Contactos</a>
+      <a href="index (2).html">Galeria</a>
+      <button class="logout-btn" onclick="logout()">Sair</button>
+    </div>
+  </nav>
+
+  <section id="top"  class="hero">
+    <div class="hero-content-group">
+      <img src="Group 8.svg" alt="Texto">
+    </div>
+    <div id="about" class="scroll-down">
+      <span>Scroll Down</span>
+      <img src="Vector.svg" alt="Arrow" class="scroll-icon">
+    </div>
+  </section>
+  <section class="about">
+    <h3><span class="highlight-text2">Personal</span><br>About me</h3>
+    <div class="about-text">
+      <p>Saudações, sou <span class="highlight-text">Adilson Gavumende</span>, técnico de suporte informático e designer gráfico com habilidades em design gráfico.</p>
+      <p>Possuo experiência em agências de marketing digital, atuando em Moçambique e no Brasil.</p>
+      <p>Tenho capacidade para resolver uma variedade de problemas técnicos e desenvolver designs criativos e impactantes para diferentes mídias, sempre buscando qualidade e eficiência.</p>
+    </div>
+    <div class="about-line"></div>
+  </section>
+</section><section class="about-career">
+  <section class="education">
+    <h3>Educação</h3>
+    <div class="timeline">
+      <div class="years">2024</div>
+      <div class="details">
+        <span class="empresa">ITC - Instituto de Transportes e Comunicações</span>
+        <span class="funcao">Técnico de Informática</span>
+      </div>
+
+      <div class="years">2023</div>
+      <div class="details">
+        <span class="empresa">ITC - Instituto de Transportes e Comunicações</span>
+        <span class="funcao">Curso Técnico de Eletricidade Industrial</span>
+      </div>
+
+      <div class="years">2023</div>
+      <div class="details">
+        <span class="empresa">Udemy Academy</span>
+        <span class="funcao">Curso Designer Gráfico e UI/UX</span>
+      </div>
+
+      <div class="years">2022</div>
+      <div class="details">
+        <span class="empresa">Domestica Academy</span>
+        <span class="funcao">Curso de Desenvolvimento de Identidade Visuais</span>
+      </div>
+
+      <div class="years">2012</div>
+      <div class="details">
+        <span class="empresa">Escola Secundária da Namaacha</span>
+        <span class="funcao">10ª Classe</span>
+      </div>
+    </div>
+  </section>
+  <div class="divider"></div>
+  <section class="experience">
+    <h3>Experiência</h3>
+    <div class="timeline">
+      <div class="years">Actual</div>
+      <div class="details">
+        <span class="empresa">Slay Agencia Criativa</span>
+        <span class="funcao">Director Criativo Senior</span>
+      </div>
+
+      <div class="years">2025</div>
+      <div class="details">
+        <span class="empresa">Signus Moçambique</span>
+        <span class="funcao">Designer Gráfico Junior - Senior</span>
+      </div>
+
+      <div class="years">2023</div>
+      <div class="details">
+        <span class="empresa">Implement Group Moçambique</span>
+        <span class="funcao">Designer Gráfico Junior</span>
+      </div>
+
+      <div class="years">2024</div>
+      <div class="details">
+        <span class="empresa">Mweti Criativa Moçambique</span>
+        <span class="funcao">Diretor Criativo Junior</span>
+      </div>
+
+      <div class="years">2021</div>
+      <div class="details">
+        <span class="empresa">KiaTiva Agency Moçambique</span>
+        <span class="funcao">Designer Gráfico</span>
+      </div>
+
+      <div class="years">2020</div>
+      <div class="details">
+        <span class="empresa">Agência de Marketing AZA Brasil</span>
+        <span class="funcao">Designer Gráfico</span>
+      </div>
+    </div>
+  </section>
+</section>
+<section id="languages" class="languages">
+  <div class="languages-header">
+    <div class="line"></div>
+    <h3>Idiomas</h3>
+  </div>
+
+  <div class="language-list">
+    <div class="language-item">
+      <span class="nome">Português</span>
+      <div class="nivel">
+        <span class="circle filled"></span>
+        <span class="circle filled"></span>
+        <span class="circle filled"></span>
+        <span class="level-text">Avançado</span>
+      </div>
+    </div>
+
+    <div class="language-item">
+      <span class="nome">Changana</span>
+      <div class="nivel">
+        <span class="circle filled"></span>
+        <span class="circle filled"></span>
+        <span class="circle filled"></span>
+        <span class="level-text">Avançado</span>
+      </div>
+    </div>
+
+    <div class="language-item">
+      <span class="nome">Espanhol</span>
+      <div class="nivel">
+        <span class="circle filled"></span>
+         <span class="circle"></span>
+        <span class="circle"></span>
+        <span class="level-text">Basico</span>
+      </div>
+    </div>
+
+    <div class="language-item">
+      <span class="nome">Inglês</span>
+      <div class="nivel">
+        <span class="circle filled"></span>
+       <span class="circle filled"></span>
+        <span class="circle"></span>
+        <span class="level-text">Intermediário</span>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="line2"></div>
+<section class="skills">
+  <h3>Skills</h3>
+  <div class="skills-list">
+    <span>UI/UX Design</span>
+    <span>Designer Gráfico</span>
+  </div>
+</section>
+<section class="khanimambo">
+  <h2>KHANIMAMBO</h2>
+</section>
+ <section id="contactos" class="contact-bar">
+    <div class="contact-left">
+      <img src="angle-small-down 1.png" alt="Chat Icon" class="chat-icon">
+      <span>Chat with me</span>
+    </div>
+    <div class="contact-right">
+      <a href="mailto:gavumendeadilson@gmail.com">Gavumendeadilson@gmail.com</a>
+    </div>
+  </section>
+  <script>
+function logout() {
+  window.location.href = 'login.html';
+}
+</script>
+</body>
+</html>

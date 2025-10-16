@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - CV Adilson</title>
+<style>
+  /* Reset e tipografia */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  html, body { height: 100%; }
+
+  /* Layout principal */
+  body {
+    display: flex;
+    height: 100vh;
+  }
+
+  /* Lado esquerdo - imagem */
+  .login-left {
+    flex: 1;
+    background: url('1Aa.jpg') center/cover no-repeat;
+    height: 100vh;
+  }
+
+  /* Lado direito - formulário */
+  .login-right {
+    flex: 1;
+    background-color: #1E1E1E;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    color: white;
+  }
+
+  /* Título */
+  .login-right h2 {
+    color: #FFA202;
+    font-size: 48px;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  /* Inputs */
+  .login-right input {
+    width: 80%;
+    max-width: 400px;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: #222;
+    color: white;
+    font-size: 16px;
+    transition: border 0.3s ease, background-color 0.3s ease;
+  }
+  .login-right input:focus {
+    outline: none;
+    border: 2px solid #FFA202;
+    background-color: #1E1E1E;
+  }
+
+  /* Botão */
+  .login-right button {
+    width: 80%;
+    max-width: 400px;
+    padding: 15px;
+    border: none;
+    border-radius: 8px;
+    background-color: #FFA202;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  .login-right button:hover {
+    background-color: #ffb400;
+    transform: scale(1.03);
+  }
+
+  /* Mensagem de erro */
+  .error {
+    color: #ff4c4c;
+    text-align: center;
+    margin-bottom: 15px;
+    display: none;
+  }
+
+  /* Rodapé */
+  .login-footer {
+    font-size: 14px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 30px;
+    line-height: 1.5;
+  }
+
+  /* Responsividade */
+  @media (max-width: 900px) {
+    body { flex-direction: column; }
+    .login-left, .login-right { width: 100%; height: 50%; }
+    .login-right h2 { font-size: 32px; }
+  }
+</style>
+</head>
+<body>
+  <div class="login-left"></div>
+  <div class="login-right">
+    <h2>Bem-vindo</h2>
+    <div class="error" id="error">Usuário ou senha incorretos</div>
+    <input type="text" id="username" placeholder="Usuário">
+    <input type="password" id="password" placeholder="Senha">
+    <button onclick="login()">Entrar</button>
+    <div class="login-footer">
+      <p>Digite seu usuário e senha para acessar o portfólio.</p>
+      <p><strong>Usuário:</strong> AdilsonGavumende</p>
+      <p><strong>Senha:</strong> weareslay2025</p>
+    </div>
+  </div>
+
+<script>
+function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  if (username === 'AdilsonGavumende' && password === 'weareslay2025') {
+    window.location.href = 'cv.html';
+  } else {
+    const errorMsg = document.getElementById('error');
+    errorMsg.style.display = 'block';
+    errorMsg.style.animation = 'fadeIn 0.4s ease';
+  }
+}
+</script>
+</body>
+</html>
