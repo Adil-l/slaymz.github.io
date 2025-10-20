@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Galeria Multimídia — estilo Streaming</title>
+
+<!--
+INSTRUÇÕES RÁPIDAS (LER ANTES DE EDITAR)
+- Este ficheiro é autocontido: HTML + CSS + JS num só index.html.
+- Onde substituir assets (imagens/videos/audios): procure por "TROCAR AQUI" nos atributos src.
+  Exemplos:
+    <img src="assets/img1.jpg" ...>        <!-- TROCAR AQUI -->
+    <video src="assets/video1.mp4" ...>    <!-- TROCAR AQUI -->
+    <audio src="assets/audio1.mp3" ...>    <!-- TROCAR AQUI -->
+- Para alterar a paleta (cores), mude as variáveis CSS no :root (ver fim do ficheiro / seção "Como alterar a paleta").
+- O layout é responsivo. Para um iniciante: edite ou troque os ficheiros em /assets e atualize os atributos src.
+-->
+
+<style>
+  /* =========================
+     VARIÁVEIS GLOBAIS (Paleta & espaçamento)
+     Mude aqui para alterar cores e alguns tamanhos.
+     ========================= */
+  :root{
+    --bg: #0A0A0A;            /* Fundo principal (preto próximo) */
+    --accent: #FF6A00;        /* Laranja principal */
+    --accent-700: #e45b00;    /* Laranja mais escuro */
+    --muted: #BFBFBF;         /* Texto secundário */
+    --card-radius: 10px;
+    --gap: 14px;
+    --max-width: 1200px;
+    --shadow: 0 6px 20px rgba(0,0,0,0.6);
+    --glass: rgba(255,255,255,0.03);
+  }
+
+  /* =========================
+     RESET & TIPOGRAFIA
+     ========================= */
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: var(--bg);
+    color: #fff;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    line-height:1.35;
+    padding-top:72px; /* header fixed space */
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* =========================
+     HEADER FIXO
+     ========================= */
+  header{
+    position:fixed;
+    top:0; left:0; right:0;
+    height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(0,0,0,0.25));
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    z-index:1000;
+    backdrop-filter: blur(6px);
+  }
+  .container{
+    width:100%;
+    max-width:var(--max-width);
+    padding:0 18px;
+    display:flex;
+    align-items:center;
+    gap:18px;
+  }
+  .logo{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    min-width:180px;
+  }
+  .logo svg{width:36px;height:36px; flex:0 0 36px}
+  .logo .brand{
+    font-weight:700;
+    font-size:1.05rem;
+    letter-spacing:0.2px;
+  }
+
+  nav.primary{
+    margin-left:auto;
+    display:flex;
+    gap:8px;
+  }
+  .tab-btn{
+    appearance:none;
+    background:transparent;
+    border:0;
+    color:var(--muted);
+    padding:10px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:600;
+    transition: background 180ms, color 180ms, transform 180ms;
+  }
+  .tab-btn[aria-current="true"],
+  .tab-btn:hover{
+    background:linear-gradient(90deg, rgba(255,106,0,0.12), rgba(255,106,0,0.06));
+    color:#fff;
+    transform:translateY(-2px);
+  }
+
+  /* Focus acessível */
+  .tab-btn:focus{
+    outline:3px solid rgba(255,106,0,0.18);
+    outline-offset:3px;
+  }
+
+  /* =========================
+     MAIN CONTAINER E SEÇÕES
+     ========================= */
+  main{
+    max-width:var(--max-width);
+    margin:0 auto;
+    padding:30px 18px 80px;
+  }
+  section{
+    margin-bottom:48px;
+  }
+
+  /* ---------- HOME (capa full-bleed) ---------- */
+  .hero{
+    position:relative;
+    border-radius:12px;
+    overflow:hidden;
+    min-height:360px;
+    box-shadow: var(--shadow);
+  }
+  .hero .cover{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    /* TROCAR AQUI: src da imagem de capa */
+  }
+  .hero .overlay{
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(10,10,10,0.15), rgba(10,10,10,0.65));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+  }
+  .hero .welcome{
+    text-align:center;
+    max-width:900px;
+  }
+  .hero h1{
+    font-size:clamp(1.6rem, 3.8vw, 3rem);
+    margin:0 0 10px;
+    letter-spacing:0.6px;
+  }
+  .hero p{ color:var(--muted); margin:0 0 18px; font-size:1rem;}
+  .cta{
+    display:inline-block;
+    background:var(--accent);
+    color:#fff;
+    padding:10px 18px;
+    border-radius:8px;
+    font-weight:700;
+    cursor:pointer;
+    border:2px solid transparent;
+    transition: transform 180ms, background 160ms;
+  }
+  .cta:hover{ transform:translateY(-3px); background:var(--accent-700) }
+
+  /* =========================
+     GRID / CARDS estilo "Netflix"
+     Implementamos linhas (carousel) horizontais com scroll-snap.
+     ========================= */
+
+  .row{
+    margin: 22px 0;
+  }
+  .row h3{
+    margin:0 0 8px;
+    font-size:1.05rem;
+    color:#fff;
+  }
+
+  /* Carousel container: rolagem horizontal */
+  .carousel{
+    display:flex;
+    gap:var(--gap);
+    overflow-x:auto;
+    padding-bottom:6px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:thin;
+  }
+  .carousel::-webkit-scrollbar{height:8px}
+  .carousel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.06);border-radius:6px}
+
+  /* cada item: queremos 3 visíveis em desktop (>=1024px), 2 tablet, 1 mobile */
+  .card{
+    flex: 0 0 calc((100% - (var(--gap)*2))/3); /* 3 per view by default */
+    scroll-snap-align:start;
+    border-radius:var(--card-radius);
+    overflow:hidden;
+    background:var(--glass);
+    transition: transform 220ms ease, box-shadow 220ms ease;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+    position:relative;
+    min-width:220px; /* floor */
+  }
+  /* imagem do card */
+  .card img,
+  .card video{
+    width:100%;
+    height:160px;
+    object-fit:cover;
+    display:block;
+    transition: transform 300ms ease;
+    
+  }
+  /* caption (para Imagens B) */
+  .caption{
+    padding:10px;
+    font-size:0.92rem;
+    color:var(--muted);
+    background:transparent;
+  }
+
+  /* hover / foco */
+  .card:hover,
+  .card:focus-within{
+    transform:translateY(-6px);
+    box-shadow: 0 14px 40px rgba(0,0,0,0.6);
+  }
+  .card:hover img,
+  .card:focus-within img{
+    transform:scale(1.06);
+  }
+
+  /* overlay icon (zoom) */
+  .zoom-overlay{
+    position:absolute;
+    right:8px;
+    top:8px;
+    background:rgba(0,0,0,0.45);
+    padding:6px;
+    border-radius:8px;
+    display:flex;
+    gap:6px;
+    align-items:center;
+    justify-content:center;
+  }
+  .zoom-overlay svg{width:18px;height:18px; opacity:0.95}
+
+  /* video card extras */
+  .video-controls{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    padding:10px;
+    justify-content:space-between;
+    background:linear-gradient(0deg, rgba(0,0,0,0.03), transparent);
+  }
+  .speed-select{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+    color:var(--muted);
+    padding:6px 8px;
+    border-radius:8px;
+    font-weight:600;
+  }
+
+  /* audio cards */
+  .audio-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+    gap:var(--gap);
+  }
+  .audio-card{
+    padding:12px;
+    border-radius:var(--card-radius);
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    box-shadow: var(--shadow);
+  }
+  .meta{ font-weight:700; margin-bottom:8px; color:#fff }
+  .meta small{ display:block; font-weight:400; color:var(--muted); margin-top:4px }
+
+  /* =========================
+     MODAL / LIGHTBOX
+     ========================= */
+  .modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background: linear-gradient(180deg, rgba(0,0,0,0.7), rgba(0,0,0,0.85));
+    z-index:2000;
+    padding:20px;
+  }
+  .modal[open]{ display:flex; }
+  .modal-inner{
+    max-width:1100px;
+    width:100%;
+    max-height:90vh;
+    border-radius:12px;
+    overflow:hidden;
+    position:relative;
+    background:#060606;
+    box-shadow:0 30px 80px rgba(0,0,0,0.8);
+    padding:14px;
+  }
+  .modal-media{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    height:calc(100% - 56px);
+  }
+  .modal-media img, .modal-media video{
+    max-width:100%;
+    max-height:100%;
+    border-radius:8px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  }
+  .modal-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+    margin-top:10px;
+    padding:6px 4px;
+  }
+  .modal-close{
+    background:transparent;
+    border:0;
+    color:var(--muted);
+    padding:8px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700;
+  }
+  .modal-nav{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+  .icon-btn{
+    background:rgba(255,255,255,0.03);
+    border:0;
+    padding:8px;
+    border-radius:8px;
+    cursor:pointer;
+  }
+  .icon-btn svg{width:18px;height:18px}
+  .modal [tabindex="0"]:focus{ outline:3px solid rgba(255,106,0,0.18); outline-offset:4px }
+
+  /* =========================
+     FOOTER
+     ========================= */
+  footer{
+    text-align:center;
+    color:var(--muted);
+    padding:24px;
+  }
+
+  /* =========================
+     RESPONSIVE
+     ========================= */
+  @media (max-width:1023px){
+    .card{ flex:0 0 calc((100% - var(--gap))/2) } /* 2 per view tablet */
+  }
+  @media (max-width:640px){
+    body{ padding-top:64px }
+    .card{ flex:0 0 calc(100% - 12px) } /* 1 per view mobile */
+    .hero{ min-height:260px }
+    .card img, .card video{ height:180px }
+  }
+
+  /* ensure focus visible for keyboard navigation on all interactive elements */
+  :focus{ outline-offset:3px; }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container" role="banner">
+    <div class="logo" aria-hidden="false">
+      <!-- Small SVG logo (inline) -->
+      <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+        <circle cx="50" cy="50" r="46" fill="var(--accent)"></circle>
+        <text x="50" y="58" font-size="40" text-anchor="middle" fill="#0A0A0A" font-family="Verdana">S</text>
+      </svg>
+      <div class="brand">WeAreSlay — Gallery</div>
+    </div>
+
+    <nav class="primary" role="navigation" aria-label="Menu principal">
+      <!-- Buttons control sections by JS; aria-current marks the active -->
+      <button class="tab-btn" data-target="home" aria-current="true">Home</button>
+      <button class="tab-btn" data-target="imagesA">Imagens A</button>
+      <button class="tab-btn" data-target="imagesB">Imagens B</button>
+      <button class="tab-btn" data-target="videos">Vídeos / Áudio</button>
+    </nav>
+  </div>
+</header>
+
+<main role="main">
+
+  <!-- ========= HOME ========= -->
+  <section id="home" class="panel" role="region" aria-label="Home">
+    <div class="hero" role="img" aria-label="Capa de boas-vindas">
+      <!-- TROCAR AQUI: Coloque a imagem de capa no atributo src abaixo -->
+      <img class="cover" src="assets/cover.jpg" alt="Capa — imagem grande" loading="lazy"> <!-- TROCAR AQUI -->
+      <div class="overlay">
+        <div class="welcome">
+          <h1>Bem-vindo à Galeria Multimídia</h1>
+          <p>Uma galeria estilo streaming — imagens, vídeos e áudio com navegação simples e leve.</p>
+          <button class="cta" id="exploreBtn" aria-label="Explorar Imagens A">Explorar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= IMAGENS A ========= -->
+  <section id="imagesA" class="panel" role="region" aria-label="Imagens A">
+    <h2>Imagens A — Estilo Netflix</h2>
+
+    <!-- Row 1 -->
+    <div class="row" aria-label="Linha 1">
+      <h3>Destaques</h3>
+      <div class="carousel" role="list">
+        <!-- Card 1 -->
+        <article class="card" role="listitem">
+          <!-- TROCAR AQUI: src da imagem -->
+          <img src="assets/img1.jpg" alt="Imagem 1 — paisagem" loading="lazy" class="gallery-image" data-index="0"> <!-- TROCAR AQUI -->
+          <div class="zoom-overlay" aria-hidden="true">
+            <!-- Magnifier SVG -->
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card" role="listitem">
+          <img src="assets/img2.jpg" alt="Imagem 2 — abstrato" loading="lazy" class="gallery-image" data-index="1"> <!-- TROCAR AQUI -->
+          <div class="zoom-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card" role="listitem">
+          <img src="assets/img3.jpg" alt="Imagem 3 — cidade" loading="lazy" class="gallery-image" data-index="2"> <!-- TROCAR AQUI -->
+          <div class="zoom-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="card" role="listitem">
+          <img src="assets/img4.jpg" alt="Imagem 4 — natureza" loading="lazy" class="gallery-image" data-index="3"> <!-- TROCAR AQUI -->
+          <div class="zoom-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="row" aria-label="Linha 2">
+      <h3>Mais imagens</h3>
+      <div class="carousel" role="list">
+        <article class="card" role="listitem">
+          <img src="assets/img5.jpg" alt="Imagem 5 — retrato" loading="lazy" class="gallery-image" data-index="4"> <!-- TROCAR AQUI -->
+          <div class="zoom-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+        </article>
+
+        <article class="card" role="listitem">
+          <img src="assets/img6.jpg" alt="Imagem 6 — mar" loading="lazy" class="gallery-image" data-index="5"> <!-- TROCAR AQUI -->
+          <div class="zoom-overlay" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= IMAGENS B (com legendas) ========= -->
+  <section id="imagesB" class="panel" role="region" aria-label="Imagens B">
+    <h2>Imagens B — Com legendas</h2>
+
+    <div class="row" aria-label="Imagens com legendas">
+      <div class="carousel" role="list">
+        <article class="card" role="listitem">
+          <img src="assets/img7.jpg" alt="Imagem 7 — mercado" loading="lazy" class="gallery-image" data-index="6"> <!-- TROCAR AQUI -->
+          <div class="caption">Mercado local — comida e cores</div>
+        </article>
+
+        <article class="card" role="listitem">
+          <img src="assets/img8.jpg" alt="Imagem 8 — arte" loading="lazy" class="gallery-image" data-index="7"> <!-- TROCAR AQUI -->
+          <div class="caption">Arte de rua — expressão</div>
+        </article>
+
+        <article class="card" role="listitem">
+          <img src="assets/img9.jpg" alt="Imagem 9 — dança" loading="lazy" class="gallery-image" data-index="8"> <!-- TROCAR AQUI -->
+          <div class="caption">Dança tradicional — ritmo</div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= VÍDEOS ========= -->
+  <section id="videos" class="panel" role="region" aria-label="Vídeos e Áudio">
+    <h2>Vídeos</h2>
+    <div class="row">
+      <div class="carousel" role="list">
+        <!-- Vídeo Card 1 -->
+        <article class="card" role="listitem">
+          <!-- TROCAR AQUI: src do vídeo -->
+          <video src="assets/video1.mp4" controls preload="metadata" poster="assets/video1-poster.jpg" class="media-video" aria-label="Vídeo 1 — apresentação"> <!-- TROCAR AQUI -->
+            O seu browser não suporta vídeo.
+          </video>
+
+          <div class="video-controls">
+            <a href="assets/video1.mp4" download aria-label="Descarregar vídeo 1" class="icon-btn" title="Descarregar"> 
+              <!-- download icon -->
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </a>
+
+            <label for="speed1" class="sr-only">Velocidade</label>
+            <select id="speed1" class="speed-select" aria-label="Velocidade do vídeo 1">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+        </article>
+
+        <!-- Vídeo Card 2 -->
+        <article class="card" role="listitem">
+          <video src="assets/video2.mp4" controls preload="metadata" poster="assets/video2-poster.jpg" class="media-video" aria-label="Vídeo 2 — making of"> <!-- TROCAR AQUI -->
+            O seu browser não suporta vídeo.
+          </video>
+
+          <div class="video-controls">
+            <a href="assets/video2.mp4" download aria-label="Descarregar vídeo 2" title="Descarregar" class="icon-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            </a>
+            <select id="speed2" class="speed-select" aria-label="Velocidade do vídeo 2">
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="1.5">1.5x</option>
+              <option value="2">2x</option>
+            </select>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- ========= ÁUDIO ========= -->
+    <h2 style="margin-top:28px">Áudio</h2>
+    <div class="audio-grid" aria-label="Lista de áudios">
+      <!-- Audio 1 -->
+      <article class="audio-card" role="listitem">
+        <div class="meta">Trilha 1 <small>Duração: ~03:20</small></div>
+        <!-- TROCAR AQUI: src do áudio -->
+        <audio controls preload="metadata" src="assets/audio1.mp3" aria-label="Áudio 1 — trilha"> <!-- TROCAR AQUI -->
+          O seu browser não suporta áudio.
+        </audio>
+        <div style="margin-top:8px;">
+          <a href="assets/audio1.mp3" download class="icon-btn" aria-label="Descarregar áudio 1" title="Descarregar">Descarregar</a>
+        </div>
+      </article>
+
+      <!-- Audio 2 -->
+      <article class="audio-card" role="listitem">
+        <div class="meta">Trilha 2 <small>Duração: ~04:10</small></div>
+        <audio controls preload="metadata" src="assets/audio2.mp3" aria-label="Áudio 2 — ambiente"> <!-- TROCAR AQUI -->
+          O seu browser não suporta áudio.
+        </audio>
+        <div style="margin-top:8px;">
+          <a href="assets/audio2.mp3" download class="icon-btn" aria-label="Descarregar áudio 2" title="Descarregar">Descarregar</a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========= FOOTER ========= -->
+  <footer role="contentinfo">
+    <small>Projeto demo — galeria multimídia estilo streaming • Paleta laranja/preto</small>
+  </footer>
+</main>
+
+<!-- =========================
+     MODAL / LIGHTBOX (IMAGEM E VÍDEO)
+     Abre ao clicar numa imagem ou (opcionalmente) num vídeo.
+     ========================= -->
+<div id="lightbox" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-inner" role="document">
+    <div class="modal-media" id="modalMedia" tabindex="0">
+      <!-- Conteúdo preenchido dinamicamente (img ou video) -->
+    </div>
+
+    <div class="modal-toolbar" aria-hidden="false">
+      <div class="modal-nav" aria-label="Navegação no modal">
+        <button class="icon-btn" id="prevBtn" aria-label="Imagem anterior">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <button class="icon-btn" id="nextBtn" aria-label="Próxima imagem">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;">
+        <!-- velocidade para vídeos no modal (aparece quando vídeo carregado) -->
+        <select id="modalSpeed" class="speed-select" aria-label="Velocidade do vídeo no modal" style="display:none;">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="1.5">1.5x</option>
+          <option value="2">2x</option>
+        </select>
+
+        <button id="closeModal" class="modal-close" aria-label="Fechar modal">
+          Fechar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     SCRIPTS (JS MINIMAL)
+     Comentários em português ajudando um iniciante.
+     ========================= -->
+<script>
+/* =========================
+   Seletores e estado global
+   ========================= */
+const tabs = document.querySelectorAll('.tab-btn');
+const panels = document.querySelectorAll('.panel');
+const exploreBtn = document.getElementById('exploreBtn');
+
+/* Modal/lightbox */
+const lightbox = document.getElementById('lightbox');
+const modalMedia = document.getElementById('modalMedia');
+const closeModalBtn = document.getElementById('closeModal');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const modalSpeed = document.getElementById('modalSpeed');
+
+/* Gallery items (todas as imagens que abrem no modal) */
+const galleryImages = Array.from(document.querySelectorAll('.gallery-image'));
+
+/* Vídeos: speed selectors */
+const speedSelectors = document.querySelectorAll('.speed-select');
+
+/* controle de foco para abrir/fechar modal corretamente */
+let lastFocusedEl = null;
+
+/* current index (aponta para galleryImages array quando modal aberto com imagem) */
+let currentIndex = -1;
+
+/* =========================
+   Função: troca de abas (sem reload)
+   - mostra somente a secção selecionada
+   - atualiza atributo aria-current para acessibilidade
+   - atualiza hash na URL para permitir deep-link
+   ========================= */
+function switchTab(targetName, pushHash = true){
+  panels.forEach(p => { p.style.display = (p.id === targetName) ? 'block' : 'none'; });
+  tabs.forEach(t => {
+    t.setAttribute('aria-current', t.dataset.target === targetName ? 'true' : 'false');
+  });
+  if(pushHash){
+    history.replaceState(null,'', '#'+targetName);
+  }
+  // rolar para o topo do conteúdo (boa experiência em mobile)
+  window.scrollTo({top: document.querySelector('#' + targetName).offsetTop - 64, behavior: 'smooth'});
+}
+
+/* Inicialização: detectar hash na URL ou padrão "home" */
+(function initTabsFromHash(){
+  const hash = location.hash.replace('#','') || 'home';
+  // se existir seção com esse id, seleciona; senão, escolhe home
+  const valid = document.getElementById(hash) ? hash : 'home';
+  switchTab(valid, false);
+})();
+
+/* adicionar evento nos botões do header */
+tabs.forEach(btn => {
+  btn.addEventListener('click', () => switchTab(btn.dataset.target));
+});
+
+/* CTA "Explorar" leva para Imagens A */
+exploreBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  switchTab('imagesA');
+});
+
+/* =========================
+   Modal: abrir imagem / vídeo
+   - Reutilizamos o mesmo modal para imagens e vídeos
+   - Para imagens: criamos <img> dentro do modal
+   - Para vídeos: criamos <video controls ...>
+   - Guardamos foco anterior para restaurar depois de fechar
+   ========================= */
+function openModalWithImage(index){
+  currentIndex = index;
+  const imgEl = galleryImages[index];
+  if(!imgEl) return;
+  // guardar foco
+  lastFocusedEl = document.activeElement;
+
+  // limpar conteúdo do modal
+  modalMedia.innerHTML = '';
+
+  // montar nova imagem
+  const img = document.createElement('img');
+  img.src = imgEl.src; // usa o mesmo src — se preferir, você pode usar um data-src com versão maior
+  img.alt = imgEl.alt || '';
+  img.loading = 'eager';
+  img.tabIndex = 0;
+
+  modalMedia.appendChild(img);
+  modalSpeed.style.display = 'none'; // esconder controle de velocidade (só para vídeo)
+  showModal();
+}
+
+/* caso queiramos abrir modal com um vídeo (opcional) */
+function openModalWithVideo(videoEl){
+  // guardar foco
+  lastFocusedEl = document.activeElement;
+
+  modalMedia.innerHTML = '';
+  const vid = document.createElement('video');
+  vid.src = videoEl.currentSrc || videoEl.src;
+  vid.controls = true;
+  vid.autoplay = true;
+  vid.preload = 'metadata';
+  vid.style.maxHeight = '80vh';
+  vid.tabIndex = 0;
+
+  modalMedia.appendChild(vid);
+  // mostrar o controle de velocidade
+  modalSpeed.style.display = 'inline-block';
+  modalSpeed.value = '1';
+  showModal();
+
+  // sincronizar a velocidade selecionada no modal com o vídeo
+  modalSpeed.onchange = () => {
+    vid.playbackRate = parseFloat(modalSpeed.value);
+  };
+}
+
+/* abrir modal (aplica atributos, focus) */
+function showModal(){
+  lightbox.setAttribute('open','');
+  lightbox.setAttribute('aria-hidden','false');
+  // foco no modal
+  modalMedia.focus();
+  // listener teclado
+  window.addEventListener('keydown', onKeyDown);
+}
+
+/* fechar modal */
+function closeModal(){
+  // se o modal contiver um vídeo em reprodução, pause para não tocar em background
+  const innerVideo = modalMedia.querySelector('video');
+  if(innerVideo && !innerVideo.paused){
+    innerVideo.pause();
+  }
+  modalMedia.innerHTML = '';
+  lightbox.removeAttribute('open');
+  lightbox.setAttribute('aria-hidden','true');
+  window.removeEventListener('keydown', onKeyDown);
+  // restaurar foco onde estava antes
+  if(lastFocusedEl) lastFocusedEl.focus();
+}
+
+/* eventos para imagens na galeria: abrir modal */
+galleryImages.forEach((imgEl, idx) => {
+  // permitir clique / Enter / Space para abrir
+  imgEl.style.cursor = 'zoom-in';
+  imgEl.tabIndex = 0;
+  imgEl.addEventListener('click', () => openModalWithImage(idx));
+  imgEl.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter' || e.key === ' '){
+      e.preventDefault();
+      openModalWithImage(idx);
+    }
+  });
+});
+
+/* Vídeos no grid: permitir abrir modal quando clicados (opcional) */
+const mediaVideos = document.querySelectorAll('.media-video');
+mediaVideos.forEach((v) => {
+  v.addEventListener('dblclick', () => openModalWithVideo(v)); // dupla-clique para abrir modal
+  // também clique simples no poster / vídeo (não atrapalhará os controls)
+  v.addEventListener('click', (e) => {
+    // se o user clicar no próprio control do video, não abrir modal
+    if(e.target.tagName.toLowerCase() === 'video') {
+      // se não quiser abrir com clique simples, comente a próxima linha
+      // openModalWithVideo(v);
+    }
+  });
+});
+
+/* =========================
+   Navegação dentro do modal (próximo / anterior)
+   - Para imagens: navegamos na lista 'galleryImages'
+   - Para vídeos: este comportamento é opcional; aqui tratamos apenas imagens
+   ========================= */
+function showNext(){
+  if(currentIndex >= 0 && currentIndex < galleryImages.length - 1){
+    openModalWithImage(currentIndex + 1);
+  }
+}
+function showPrev(){
+  if(currentIndex > 0){
+    openModalWithImage(currentIndex - 1);
+  }
+}
+nextBtn.addEventListener('click', showNext);
+prevBtn.addEventListener('click', showPrev);
+closeModalBtn.addEventListener('click', closeModal);
+
+/* fechar modal ao clicar fora do conteúdo (backdrop) */
+lightbox.addEventListener('click', (e) => {
+  if(e.target === lightbox){
+    closeModal();
+  }
+});
+
+/* =========================
+   Teclado global para modal:
+   - Esc = fechar
+   - ArrowLeft / ArrowRight = navegar imagens
+   ========================= */
+function onKeyDown(e){
+  if(e.key === 'Escape'){
+    closeModal();
+  } else if(e.key === 'ArrowRight'){
+    showNext();
+  } else if(e.key === 'ArrowLeft'){
+    showPrev();
+  }
+}
+
+/* =========================
+   Controlos de velocidade nos vídeos (grid)
+   - cada select controla o playbackRate do vídeo no mesmo card
+   ========================= */
+speedSelectors.forEach((sel) => {
+  sel.addEventListener('change', (e) => {
+    // procurar o video mais próximo no DOM (o select está dentro do mesmo card)
+    const card = sel.closest('.card');
+    if(!card) return;
+    const vid = card.querySelector('video');
+    if(!vid) return;
+    vid.playbackRate = parseFloat(sel.value || 1);
+  });
+});
+
+/* =========================
+   Acessibilidade extra:
+   - Tornar todos os botões do header focusáveis com aria
+   - Marcar elementos importantes
+   ========================= */
+/* (Já aplicámos aria-labels no HTML) */
+
+/* =========================
+   Lazy-loading & behavior sem JS:
+   - Imagens têm loading="lazy" (funciona mesmo sem JS)
+   - Se o navegador tem JS desativado, as seções aparecem uma abaixo da outra
+   ========================= */
+
+/* =========================
+   Pequena melhoria: se o usuário abrir uma imagem via URL hash (#img-N),
+   tentamos abrir o modal direto (ex: #img-2 => abre imagem com data-index 2)
+   ========================= */
+(function openFromHash(){
+  const hash = location.hash.replace('#','');
+  if(hash.startsWith('img-')){
+    const idx = parseInt(hash.split('-')[1],10);
+    if(!Number.isNaN(idx) && galleryImages[idx]){
+      openModalWithImage(idx);
+    }
+  }
+})();
+
+/* =========================
+   Fim do script
+   ========================= */
+</script>
+
+<!-- =========================
+   DOCUMENTAÇÃO / COMO EDITAR (comentários finais explicativos)
+   - Onde trocar os ficheiros: procure por 'TROCAR AQUI' no código acima.
+   - Imagens:
+     * Substitua os ficheiros em assets/ (ex: assets/img1.jpg, assets/img2.jpg, ...).
+     * Cada <img> tem alt="..." — atualize para descrever a imagem (acessibilidade).
+   - Vídeos:
+     * Substitua assets/video1.mp4 e assets/video2.mp4. Adicione poster (thumbnail) se tiver: poster="assets/video1-poster.jpg".
+     * Cada vídeo tem um botão de download que usa o mesmo ficheiro .mp4.
+     * Controle extra de velocidade altera playbackRate do elemento <video>.
+   - Áudios:
+     * Substitua assets/audio1.mp3 e assets/audio2.mp3.
+     * Há botões de download apontando para os ficheiros .mp3.
+   - Paleta de cores:
+     * Para trocar laranja/preto, altere as variáveis em :root no topo do CSS:
+         --bg, --accent, --accent-700, --muted
+   - Como adicionar mais items:
+     * Imagens: duplicar um <article class="card"> dentro da mesma .carousel e atualizar src e alt.
+     * Vídeos/Áudios: duplicar o bloco correspondente e apontar para novos ficheiros.
+   - Acessibilidade:
+     * Mantenha alt nos <img>. Use aria-label em botões/links se o texto não for autoexplicativo.
+   - Testar localmente:
+     * Este ficheiro funciona a partir do sistema de ficheiros (abrir index.html no browser).
+     * Se os vídeos ou áudios não carregarem localmente no Chrome por causa de política CORS, use um servidor local simples (ex: `python -m http.server 8000`) e abra http://localhost:8000
+   - Personalizações rápidas:
+     * Border-radius: ajustar --card-radius
+     * Espaçamentos: ajustar --gap
+     * Sombras: ajustar --shadow
+
+   ========================= -->
+</body>
+</html>
