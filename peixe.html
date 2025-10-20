@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercícios de Formulários HTML5</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* === Estilo geral === */
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #1a1a1a;
+      margin-bottom: 30px;
+    }
+
+    h2 {
+      color: #222;
+      border-left: 4px solid #0078ff;
+      padding-left: 10px;
+    }
+
+    /* === Formulários === */
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 40px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    form label {
+      display: block;
+      margin-top: 10px;
+      font-weight: 500;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    /* === Botões === */
+    button {
+      background-color: #0078ff;
+      color: white;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      margin-top: 12px;
+    }
+
+    button:hover {
+      background-color: #005ecc;
+    }
+
+    /* === Fieldset === */
+    fieldset {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      padding: 15px;
+    }
+
+    /* === Responsividade === */
+    @media (min-width: 600px) {
+      form {
+        width: 80%;
+        margin: 0 auto 40px auto;
+      }
+    }
+
+    /* === Modo Escuro Automático === */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #1c1c1c;
+        color: #f1f1f1;
+      }
+
+      form {
+        background: #2a2a2a;
+        box-shadow: 0 2px 8px rgba(255, 255, 255, 0.05);
+      }
+
+      input,
+      select,
+      textarea {
+        background: #333;
+        color: #f1f1f1;
+        border: 1px solid #555;
+      }
+
+      button {
+        background-color: #1e90ff;
+      }
+
+      button:hover {
+        background-color: #0070d1;
+      }
+
+      h2 {
+        color: #f1f1f1;
+        border-left-color: #1e90ff;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Exercícios de Formulários em HTML5</h1>
+
+  <!-- 1 -->
+  <h2>1. Tipos diferentes de Input</h2>
+  <form>
+    <input type="text" placeholder="Nome (text)">
+    <input type="email" placeholder="E-mail (email)">
+    <input type="password" placeholder="Senha (password)">
+    <input type="date">
+    <input type="file">
+  </form>
+
+  <hr>
+
+  <!-- 2 -->
+  <h2>2. Formulário simples (Nome e E-mail)</h2>
+  <form>
+    <label>Nome Completo:</label>
+    <input type="text" required>
+    <label>Email:</label>
+    <input type="email" required>
+    <button type="submit">Enviar</button>
+  </form>
+
+  <hr>
+
+  <!-- 3 -->
+  <h2>3. Formulário de Login</h2>
+  <form>
+    <label>Usuário:</label>
+    <input type="text" required>
+    <label>Senha:</label>
+    <input type="password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <hr>
+
+  <!-- 4 -->
+  <h2>4. Inscrição em Evento</h2>
+  <form>
+    <input type="text" placeholder="Nome" required>
+    <input type="email" placeholder="Email" required>
+    <input type="tel" placeholder="Telefone" required>
+    <label>Workshop:</label>
+    <select>
+      <option>Design</option>
+      <option>Programação</option>
+      <option>Marketing</option>
+    </select>
+    <label><input type="checkbox" required> Aceito os termos</label>
+    <button type="submit">Inscrever</button>
+  </form>
+
+  <hr>
+
+  <!-- 5 -->
+  <h2>5. Candidatura a Emprego</h2>
+  <form>
+    <input type="text" placeholder="Nome" required>
+    <input type="email" placeholder="Email" required>
+    <input type="number" placeholder="Anos de experiência" min="0">
+    <input type="text" placeholder="Formação">
+    <input type="tel" placeholder="Contacto" required>
+    <input type="time">
+    <label>Currículo:</label>
+    <input type="file" accept=".pdf,.doc,.docx">
+    <button type="submit">Enviar</button>
+  </form>
+
+  <hr>
+
+  <!-- 6 -->
+  <h2>6. Cadastro de Estudantes</h2>
+  <form>
+    <input type="text" placeholder="Nome" required>
+    <label>Sexo:</label><br>
+    <input type="radio" name="sexo"> Masculino
+    <input type="radio" name="sexo"> Feminino <br>
+    <input type="email" placeholder="Email" required>
+    <label>Hobbies:</label><br>
+    <input type="checkbox"> Música
+    <input type="checkbox"> Desporto
+    <input type="checkbox"> Leitura <br>
+    <label>Curso:</label>
+    <select>
+      <option>Informática</option>
+      <option>Gestão</option>
+      <option>Medicina</option>
+    </select>
+    <input type="text" placeholder="Profissão">
+    <input type="date" placeholder="Data de Nascimento">
+    <input type="tel" placeholder="Contacto">
+    <input type="time" placeholder="Hora de cadastro">
+    <input type="text" placeholder="Residência">
+    <label><input type="checkbox" required> Aceito os termos</label>
+    <textarea placeholder="Mensagem"></textarea>
+    <button type="submit">Enviar</button>
+    <button type="reset">Limpar</button>
+  </form>
+
+  <hr>
+
+  <!-- 7 -->
+  <h2>7. Cadastro de Medicamentos</h2>
+  <form>
+    <input type="text" placeholder="Nome do medicamento" required>
+    <label>Categoria:</label>
+    <select>
+      <option>Antibiótico</option>
+      <option>Analgésico</option>
+      <option>Vitamina</option>
+    </select>
+    <input type="date" placeholder="Validade">
+    <input type="number" placeholder="Quantidade">
+    <input type="text" placeholder="Fornecedor">
+    <button type="submit">Cadastrar</button>
+    <button type="reset">Cancelar</button>
+  </form>
+
+  <hr>
+
+  <!-- 8 -->
+  <h2>8. Cadastro de Usuário com Validação</h2>
+  <form>
+    <input type="text" placeholder="Nome" required>
+    <input type="email" placeholder="Email" required>
+    <input type="password" placeholder="Senha (6-12 caracteres)" minlength="6" maxlength="12" required>
+    <input type="password" placeholder="Confirmar senha" pattern=".{6,12}" required>
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <hr>
+
+  <!-- 9 -->
+  <h2>9. Formulário de Pagamento</h2>
+  <form>
+    <input type="text" placeholder="Nome do cartão" required>
+    <input type="text" pattern="\d{16}" placeholder="0000 0000 0000 0000" required>
+    <input type="month" required>
+    <input type="text" pattern="\d{3}" placeholder="CVV (123)" required>
+    <button type="submit">Pagar</button>
+  </form>
+
+  <hr>
+
+  <!-- 10 -->
+  <h2>10. Formulário Multi-etapas</h2>
+  <form>
+    <fieldset>
+      <legend>1. Dados Pessoais</legend>
+      <input type="text" placeholder="Nome">
+      <button type="button">Próximo</button>
+    </fieldset>
+    <fieldset>
+      <legend>2. Contacto</legend>
+      <input type="email" placeholder="Email">
+      <button type="button">Voltar</button>
+      <button type="button">Próximo</button>
+    </fieldset>
+    <fieldset>
+      <legend>3. Confirmação</legend>
+      <p>Revise os dados e confirme.</p>
+      <button type="button">Voltar</button>
+      <button type="submit">Confirmar</button>
+    </fieldset>
+  </form>
+
+  <hr>
+
+  <!-- 11 -->
+  <h2>11. Formulário Responsivo com CSS</h2>
+  <form>
+    <input type="text" placeholder="Nome" required>
+    <input type="email" placeholder="Email" required>
+    <input type="password" placeholder="Senha" required>
+    <input type="tel" placeholder="Contacto" required>
+    <input type="date" required>
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <hr>
+
+  <!-- 12 -->
+  <h2>12. Cadastro de Professor</h2>
+  <form>
+    <input type="text" placeholder="Nome" required>
+    <input type="email" placeholder="Email" required>
+    <input type="text" placeholder="Disciplina">
+    <label>Foto de perfil:</label>
+    <input type="file" accept="image/*">
+    <button type="submit">Cadastrar</button>
+  </form>
+
+  <hr>
+
+  <!-- 13 -->
+  <h2>13. Pesquisa de Opinião</h2>
+  <form>
+    <label>Curso:</label>
+    <select>
+      <option>Informática</option>
+      <option>Gestão</option>
+      <option>Economia</option>
+    </select>
+    <label>Avaliação:</label><br>
+    <input type="radio" name="avaliacao"> 1
+    <input type="radio" name="avaliacao"> 2
+    <input type="radio" name="avaliacao"> 3
+    <input type="radio" name="avaliacao"> 4
+    <input type="radio" name="avaliacao"> 5
+    <label>Gostos:</label><br>
+    <input type="checkbox"> Práticas
+    <input type="checkbox"> Teóricas
+    <input type="checkbox"> Online
+    <textarea placeholder="Comentário"></textarea>
+    <button type="submit">Enviar</button>
+  </form>
+
+</body>
+</html>
+
